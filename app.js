@@ -1,3 +1,8 @@
+let carteNombreAge = document.getElementById('carteNombreAge');
+let carteSommeAge = document.getElementById('carteSommeAge');
+let carteNombreNote = document.getElementById('carteNombreNote');
+let carteSommeNote = document.getElementById('carteSommeNote');
+
 const tab = [
   { nom: 'Diallo', prenom: 'Bine', age: 13, note: 12.1, moy: 13 },
   { nom: 'Barry', prenom: 'maeiama', age: 14, note: 13.1, moy: 13 },
@@ -19,11 +24,58 @@ const tab = [
   { nom: 'viallo', prenom: 'hawa', age: 16, note: 11.1, moy: 13 },
   { nom: 'Diallo', prenom: 'hawa', age: 16, note: 11.1, moy: 13 },
 ];
+
+// fonction carte
+let NombreAge = 0;
+function cardNombreAge() {
+  for (let i = 0; i < tab.length; i++) {
+    NombreAge += tab[i].age;
+    carteSommeAge.innerHTML = NombreAge;
+  }
+}
+cardNombreAge();
+
+// la somme des notes
+let SommeNote = 0;
+function cardSommeNote() {
+  for (let i = 0; i < tab.length; i++) {
+    SommeNote += tab[i].note;
+    carteSommeNote.innerHTML = SommeNote.toFixed(2);
+  }
+}
+cardSommeNote();
+// nombre de note
+let Nbrnote = 0;
+function NombreNote() {
+  for (let i = 0; i < tab.length; i++) {
+    if (typeof tab[i].note === 'number') {
+      Nbrnote += 1;
+    } else {
+      console.log(
+        "L'objet à l'index " + i + " n'a pas de propriété 'note' valide."
+      );
+    }
+  }
+  carteNombreNote.innerHTML = Nbrnote;
+}
+NombreNote();
+// nombre de age
+let NbrAge = 0;
+function NbreAge() {
+  for (let i = 0; i < tab.length; i++) {
+    if (typeof tab[i].age === 'number') {
+      NbrAge += 1;
+    }
+  }
+  carteNombreAge.innerHTML = NbrAge;
+}
+NbreAge();
+
 // variable pour la pagnination
 let bNext = document.getElementsByClassName('next');
 let bPrev = document.getElementsByClassName('prev');
-let page = 5;
-let stars = 0;
+let page = 5; // nombre delement par page
+let stars = 0; // debut de l'element du tableau
 let actuelPage = 1;
 let maxPage = Math.ceil(tab.length / page);
 
@@ -47,9 +99,10 @@ function lamoyenne() {
   for (let j = 0; j < tab.length; j++) {
     sommeMoy += tab[j].note / tab.length;
   }
+  let somfixeTwo = sommeMoy.toFixed(2);
   document.querySelector(
     '#moyenne'
-  ).innerText = `la moyenne des etudiants est : ${sommeMoy}`;
+  ).innerText = `la moyenne des etudiants est : ${somfixeTwo}`;
 }
 
 lamoyenne();
