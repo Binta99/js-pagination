@@ -30,7 +30,7 @@ let maxPage = Math.ceil(tab.length / page);
 forModal.addEventListener('click', function () {
   $(exampleModal).modal('show');
 });
-// fermeture modal avec le buton save
+
 butonSave.addEventListener('click', addNewEntry);
 
 function addNewEntry() {
@@ -89,7 +89,7 @@ function showTab() {
   document.querySelector('.affichage').innerHTML = table;
 
   item();
-  // creation du button sup
+  // creation des buttons
   document.querySelectorAll('.sup').forEach((button) => {
     button.addEventListener('click', function () {
       let row = button.closest('tr');
@@ -105,7 +105,6 @@ function showTab() {
       lamoyenne();
     });
   });
-  // creation du button modif
 
   document.querySelectorAll('.modif').forEach((button) => {
     button.addEventListener('click', function () {
@@ -116,7 +115,7 @@ function showTab() {
       modalPrenom.value = entry.prenom;
       modalAge.value = entry.age;
       modalNote.value = entry.note;
-      // pour ouvrir le modal directement avec le buton modif
+
       $(exampleModal).modal('show');
 
       butonSave.removeEventListener('click', addNewEntry);
@@ -130,9 +129,9 @@ function showTab() {
         localStorage.setItem('tab', JSON.stringify(tab));
         $(exampleModal).modal('hide');
         showTab();
-        carte(); // modifie la function des cartes automatiquement
-
+        carte();
         lamoyenne();
+
         modalAge.value = '';
         modalNote.value = '';
         modalNom.value = '';

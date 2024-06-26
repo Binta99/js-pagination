@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tableau avec Pagination</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <button class="forModal">Ajouter</button>
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Nouvel étudiant</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="modalNom" placeholder="Nom" />
+            <input type="text" id="modalPrenom" placeholder="Prénom" />
+            <input type="number" id="modalAge" placeholder="Âge" />
+            <input type="number" id="modalNote" placeholder="Note" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="butonSave">
+              Sauvegarder
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="affichage"></div>
+    <div class="pagination-container"></div>
+    <input type="text" id="filtre" placeholder="Filtrer par nom" />
+    <div>
+      <div id="carteNombreAge">Nombre d'âges : 0</div>
+      <div id="carteSommeAge">Somme des âges : 0</div>
+      <div id="carteNombreNote">Nombre de notes : 0</div>
+      <div id="carteSommeNote">Somme des notes : 0</div>
+    </div>
+
+    <script>
+      let carteNombreAge = document.getElementById('carteNombreAge');
+      let carteSommeAge = document.getElementById('carteSommeAge');
+      let carteNombreNote = document.getElementById('carteNombreNote');
+      let carteSommeNote = document.getElementById('carteSommeNote');
+
+      let exampleModal = document.querySelector('#exampleModal');
+      let forModal = document.querySelector('.forModal');
+      let modalNom = document.getElementById('modalNom');
+      let modalPrenom = document.getElementById('modalPrenom');
+      let modalAge = document.querySelector('#modalAge');
+      let modalNote = document.querySelector('#modalNote');
+      let butonSave = document.querySelector('#butonSave');
+
+      localStorage.removeItem('tab');
+      const tab = [];
+      let page = 5; // nombre d'éléments par page
+      let start = 0; // début de l'élément du tableau
+      let actuelPage = 1;
+      let maxPage = Math.ceil(tab.length / page);
+
+      forModal.addEventListener('click', function () {
+        $(exampleModal).modal('show');
+      });
+
+      butonSave.addEventListener('click', function () {
+        let nom = modalNom.value;
+        let prenom = modalPrenom.value;
+        let age = parseInt(modalAge.value);
+        let note = parseInt(modalNote.value);
+
+        if (nom && prenom && !isNaN(age) && !isNaN(note)) {
+          tab.push({
+            nom: nom,
+            prenom: prenom,
+            age: age,
+            note: note,
+            moy: note,
+          });
+
+          localStorage.setItem('tab', JSON.stringify(tab));
+
+          $(exampleModal).modal('hide');
+
+          showTab();
+          carte();
+          lamoyenne();
+        } else {
+          alert('Veuillez remplir tous les champs correctement.');
+        }
+      });
+
+      function showTab() {
+        let table = `<table class="table"><thead><tr><th>Nom</th><th>Prénom</th><th>Âge</th><th>Note</th><th>Moyenne</th></tr></thead><tbody>`;
+        for (let i = start; i < start + page && i < tab.length; i++) {
+          let item = tab[i];
+          table += `<tr>
+          <td>${item.nom}</td>
+          <td>${item.prenom}</td>
+          <td>${item.age}</td>
+          <td>${item.note}</td>
+          <td>${item.moy}</td>
+        </tr>`;
+        }
+        table += '</tbody></table>';
+        document.querySelector('.affichage').innerHTML = table;
+        updatePagination();
+      }
+
+      function updatePagination() {
+        maxPage = Math.ceil(tab.length / page);
+        let bItem = document.getElementById('item');
+        if (!bItem) {
+          bItem = document.createElement('div');
+          bItem.id = 'item';
+          document.querySelector('.pagination-container').appendChild(bItem);
+        }
+        bItem.innerHTML = `Page ${actuelPage} / ${maxPage}`;
+      }
+
+      document.querySelector('.pagination-container').innerHTML = `
+      <button class="prev">Précédent</button>
+      <button class="next">Suivant</button>
+    `;
+
+      document.querySelector('.prev').addEventListener('click', prev);
+      document.querySelector('.next').addEventListener('click', next);
+
+      function first() {
+        start = 0;
+        actuelPage = 1;
+        showTab();
+      }
+
+      function end() {
+        start = (maxPage - 1) * page;
+        actuelPage = maxPage;
+        showTab();
+      }
+
+      function next() {
+        if (start + page < tab.length) {
+          start += page;
+          actuelPage++;
+          showTab();
+        }
+      }
+
+      function prev() {
+        if (start - page >= 0) {
+          start -= page;
+          actuelPage--;
+          showTab();
+        }
+      }
+
+      function carte() {
+        let nombreAge = tab.reduce((acc, cur) => acc + (cur.age ? 1 : 0), 0);
+        let sommeAge = tab.reduce((acc, cur) => acc + (cur.age || 0), 0);
+        let nombreNote = tab.reduce((acc, cur) => acc + (cur.note ? 1 : 0), 0);
+        let sommeNote = tab.reduce((acc, cur) => acc + (cur.note || 0), 0);
+
+        carteNombreAge.innerHTML = `Nombre d'âges : ${nombreAge}`;
+        carteSommeAge.innerHTML = `Somme des âges : ${sommeAge}`;
+        carteNombreNote.innerHTML = `Nombre de notes : ${nombreNote}`;
+        carteSommeNote.innerHTML = `Somme des notes : ${sommeNote.toFixed(2)}`;
+      }
+
+      let sommeMoy = 0;
+      function lamoyenne() {
+        sommeMoy = tab.reduce((acc, cur) => acc + cur.note, 0) / tab.length;
+        let somfixeTwo = sommeMoy.toFixed(2);
+        document.querySelector(
+          '#moyenne'
+        ).innerText = `la moyenne des étudiants est : ${somfixeTwo}`;
+      }
+
+      document.getElementById('filtre').addEventListener('keyup', function () {
+        let keyword = this.value.toUpperCase();
+        let table = document.querySelector('.affichage table');
+        let tr = table.getElementsByTagName('tr');
+        for (let i = 1; i < tr.length; i++) {
+          // Start from 1 to skip the header row
+          let td = tr[i].getElementsByTagName('td')[0];
+          if (td) {
+            let tdValue = td.innerText || td.textContent;
+            tdValue = tdValue.toUpperCase();
+            if (tdValue.indexOf(keyword) > -1) {
+              tr[i].style.display = '';
+            } else {
+              tr[i].style.display = 'none';
+            }
+          }
+        }
+      });
+
+      showTab();
+      carte();
+      lamoyenne();
+    </script>
+  </body>
+</html>
