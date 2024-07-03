@@ -8,11 +8,6 @@ import {
   deleteDoc,
   doc,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import {
-  getAuth,
-  signInAnonymously,
-  onAuthStateChanged,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDhrKez6N0Fks70xFD3mcXUGUn_a21cn7k',
@@ -25,15 +20,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-
-signInAnonymously(auth)
-  .then(() => {
-    console.log('Signed in anonymously');
-  })
-  .catch((error) => {
-    console.error('Error signing in anonymously: ', error);
-  });
 
 document.addEventListener('DOMContentLoaded', () => {
   let carteNombreAge = document.getElementById('carteNombreAge');
@@ -51,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let idCounter = 0;
 
   const tab = [];
-
   let page = 5;
   let stars = 0;
   let actuelPage = 1;
@@ -172,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modalPrenom.value = entry.prenom;
         modalAge.value = entry.age;
         modalNote.value = entry.note;
-
         $(exampleModal).modal('show');
+
         butonSave.removeEventListener('click', addNewEntry);
         butonSave.addEventListener('click', async function saveEdit() {
           entry.nom = modalNom.value;
@@ -182,7 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
           entry.note = parseFloat(modalNote.value);
           entry.moy = parseFloat(modalNote.value);
 
-          await updateEntry(id, entry);
+          await updateEntry(id, {
+            nom: entry.nom,
+            prenom: entry.prenom,
+            age: entry.age,
+            note: entry.note,
+            moy: entry.moy,
+          });
+
           $(exampleModal).modal('hide');
           showTab();
           carte();
@@ -197,6 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  fetchEntries();
 
   function carte() {
     let NombreAge = 0;
@@ -255,6 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ).innerText = `la moyenne des étudiants est : ${somfixeTwo}`;
   }
 
+  lamoyenne();
+
   function first() {
     stars = 0;
     actuelPage = 1;
@@ -269,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function next() {
-    if (stars + page < tab.length) {
+    if (stars + page <= tab.length) {
       stars += page;
       actuelPage++;
       showTab();
@@ -281,7 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
       stars -= page;
       actuelPage--;
       showTab();
-      console.log('bonjour');
     }
   }
 
@@ -307,14 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
           tr[i].style.display = 'none';
         }
       }
-    }
-  });
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      fetchEntries();
-    } else {
-      console.log('User is signed out');
     }
   });
 });

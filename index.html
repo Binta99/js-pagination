@@ -7,13 +7,9 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
-    <title>Document</title>
-
+    <title>Document Final</title>
     <style>
       body {
-        /* height: 100%;
-        width: 100%; */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -22,12 +18,8 @@
         padding: 0;
       }
       input {
-        /* width: 40%; */
         padding: 5px;
-        /* margin-bottom: 10px;
-        margin-top: 10px; */
       }
-
       table {
         height: 100%;
         width: 100%;
@@ -41,7 +33,6 @@
         font-weight: bold;
         font-size: 26px;
       }
-
       table thead th,
       table tbody td {
         width: 150px;
@@ -70,7 +61,6 @@
           <p class="card-text fs-5 text-danger" id="carteNombreAge"></p>
         </div>
       </div>
-
       <div class="card col-4" style="width: 18rem">
         <div class="card-body">
           <h2 class="card-title">La somme des Ages</h2>
@@ -83,7 +73,6 @@
           <p class="card-text fs-5 text-danger" id="carteNombreNote"></p>
         </div>
       </div>
-
       <div class="card col-4" style="width: 18rem">
         <div class="card-body">
           <h2 class="card-title">La somme des notes</h2>
@@ -91,7 +80,6 @@
         </div>
       </div>
     </div>
-
     <div class="row mb-4">
       <div class="col-6">
         <input type="text" id="filtre" placeholder="Rechercher un mot" />
@@ -100,7 +88,6 @@
         <button class="btn btn-secondary forModal">click</button>
       </div>
     </div>
-
     <!-- Modal -->
     <div
       class="modal fade"
@@ -147,32 +134,21 @@
         </div>
       </div>
     </div>
-    <!-- ______________ -->
-
+    <!-- Affichage du tableau et pagination -->
     <div class="affichage"></div>
     <p id="moyenne">le tableau</p>
-
     <div class="btn">
       <button class="first" onclick="first()"><<<</button>
       <button class="prev" onclick="prev()"><</button>
-      <span id="item"> </span>
+      <span id="item"></span>
       <button class="next" onclick="next()">></button>
       <button class="end" onclick="end()">>>></button>
     </div>
-
-    <!-- esaie -->
-    <!-- <input type="text" class="champs" />
-    <p class="valeurChamp"></p> -->
-
-    <!-- script -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Import des scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-
-    <script src="app.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script> -->
+    <script type="module" src="app3.js"></script>
   </body>
 </html>
